@@ -47,12 +47,9 @@ function _column_pointers(Nc, J)
     return colptr
 end
 
-function _compress_rows(Nc, colptr, I, V, combine)
+function _compress_rows!(newcolptr, newI, newV, Nc, colptr, I, V, combine)
     maxrows = maximum(diff(colptr))
     prma = fill(zero(eltype(I)), maxrows)
-    newI = similar(I)
-    newV = similar(V)
-    newcolptr = similar(colptr)
     newcolptr[1] = colptr[1]
     p = 1
     for c in 1:Nc
@@ -115,7 +112,10 @@ function sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVector{
         privateV = similar(V)
         _countingsort3!(privateI, privateJ, privateV, I, J, V, n)
         colptr = _column_pointers(n, privateJ)
-        newcolptr, newI, newV = _compress_rows(n, colptr, privateI, privateV, combine)
+        newcolptr = similar(colptr)
+        newI = privateJ # reuse this storage
+        newV = similar(V)
+        _compress_rows!(newcolptr, newI, newV, n, colptr, privateI, privateV, combine)
         privateI = nothing
         privateJ = nothing
         privateV = nothing
