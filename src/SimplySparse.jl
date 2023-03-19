@@ -17,7 +17,6 @@ function _countingsort3!(outputI, outputJ, outputV, I, J, V, Nc)
 
     @inbounds for i  in lastindex(J):-1:firstindex(J)
         j = J[i]
-        # output[count[j]] = j
         k = count[j]
         outputI[k] = I[i]
         outputJ[k] = J[i]
@@ -25,6 +24,27 @@ function _countingsort3!(outputI, outputJ, outputV, I, J, V, Nc)
         count[j] = count[j] - 1
     end
     return nothing
+end
+
+function _sortperm!(perm, arr)
+# Sorting using a single loop
+    j = 0
+    while true
+        j += 1
+        (j >= length(arr)) && break
+        if (arr[j] > arr[j + 1])
+            # Swapping the elements.
+            temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+            temp = perm[j];
+            perm[j] = perm[j + 1];
+            perm[j + 1] = temp;
+            # so that after update the loop begins from the start.
+            j = 0;
+        end
+    end
+    return perm;
 end
 
 function _column_pointers(Nc, J)
@@ -57,20 +77,21 @@ function _compress_rows!(newcolptr, newI, newV, Nc, colptr, I, V, combine)
         if !isempty(rows)
             vals = view(V, colptr[c]:colptr[c+1]-1)
             prm = view(prma, 1:length(rows))
-            @inbounds for i = axes(rows,1)
+            @inbounds for i in axes(rows,1)
                 prm[i] = i
             end
-            sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
-            r = rows[prm[1]]
+            # sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
+            _sortperm!(prm, rows)
+            r = rows[1]
             v = vals[prm[1]]
             p = newcolptr[c]
             for j in 2:lastindex(rows)
-                if rows[prm[j]] == r
+                if rows[j] == r
                     v = combine(vals[prm[j]], v)
                 else
                     newI[p] = r
                     newV[p] = v
-                    r = rows[prm[j]]
+                    r = rows[j]
                     v = vals[prm[j]]
                     p += 1
                 end
