@@ -5,16 +5,16 @@ using SparseArrays
 
 function _countingsort3!(outputI, outputJ, outputV, I, J, V, Nc)
     count = fill(zero(eltype(J)), Nc+1)
-    for i in eachindex(J) # @inbounds
+    @inbounds for i in eachindex(J)
         j = J[i]
         count[j] = count[j] + 1
     end
 
-    for i  in 2:Nc+1 # @inbounds
+    @inbounds for i  in 2:Nc+1
         count[i] = count[i] + count[i - 1]
     end
 
-    for i  in lastindex(J):-1:firstindex(J) # @inbounds
+    @inbounds for i  in lastindex(J):-1:firstindex(J)
         j = J[i]
         # output[count[j]] = j
         k = count[j]
@@ -59,7 +59,7 @@ function _compress_rows(Nc, colptr, I, V)
         if !isempty(rows)
             vals = view(V, colptr[c]:colptr[c+1]-1)
             prm = view(prma, 1:length(rows))
-            for i = axes(rows,1) # @inbounds
+            @inbounds for i = axes(rows,1)
                 prm[i] = i
             end
             sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
