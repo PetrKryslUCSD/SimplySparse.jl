@@ -1,4 +1,4 @@
-name = "SparseSparse"
+name = "SimpleSparse"
 uuid = "110573b6-4f7e-4dbd-a7c4-29eb200c7217"
 authors = ["Petr Krysl <pkrysl@ucsd.edu>"]
 version = "0.1.0"

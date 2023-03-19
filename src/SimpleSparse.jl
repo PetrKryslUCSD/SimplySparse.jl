@@ -1,4 +1,4 @@
-module SparseSparse
+module SimpleSparse
 
 using Random
 using SparseArrays

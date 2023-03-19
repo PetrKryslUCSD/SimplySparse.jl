@@ -1,1 +1,1 @@
-# SparseSparse.jl
+# SimpleSparse.jl
