@@ -1,7 +1,7 @@
 module t001
 using Random
 using SparseArrays
-using SimpleSparse
+using SimplySparse
 using Test
 
 function test()
@@ -21,7 +21,7 @@ function test()
             I = cat(I1, I2, dims=1)
             J = cat(J1, J2, dims=1)
             V = cat(V1, V2, dims=1)
-            B = SimpleSparse.sparse(I, J, V, N, N)
+            B = SimplySparse.sparse(I, J, V, N, N)
 
             @test A - B == spzeros(N, N)
         end
@@ -38,7 +38,7 @@ end # module
 module t002
 using Random
 using SparseArrays
-using SimpleSparse
+using SimplySparse
 using Test
 
 function test()
@@ -60,7 +60,7 @@ function test()
                 I = cat(I1, I2, dims=1)
                 J = cat(J1, J2, dims=1)
                 V = cat(V1, V2, dims=1)
-                B = SimpleSparse.sparse(I, J, V, Nr, Nc)
+                B = SimplySparse.sparse(I, J, V, Nr, Nc)
 
                 @test A - B == spzeros(Nr, Nc)
             end
@@ -77,7 +77,7 @@ end
 #     @show A
 
 #     I, J, V = ([1, 2, 3], [1, 1, 1], [4.42953e-02, 1.18950e+00, 9.50385e-02])
-#     B = SimpleSparse.sparse(I, J, V, Nr, Nc)
+#     B = SimplySparse.sparse(I, J, V, Nr, Nc)
 #     @show B
 
 #     @test A - B == spzeros(Nr, Nc)
@@ -93,7 +93,7 @@ end # module
 module t003
 using Random
 using SparseArrays
-using SimpleSparse
+using SimplySparse
 using Test
 
 function test()
@@ -115,7 +115,7 @@ function test()
                 I = cat(I1, I2, dims=1)
                 J = cat(J1, J2, dims=1)
                 V = cat(V1, V2, dims=1)
-                B = SimpleSparse.sparse(I, J, V, Nr, Nc)
+                B = SimplySparse.sparse(I, J, V, Nr, Nc)
 
                 @test A - B == spzeros(Nr, Nc)
             end
@@ -132,7 +132,7 @@ end # module
 module t004
 using Random
 using SparseArrays
-using SimpleSparse
+using SimplySparse
 using Test
 
 function test()
@@ -140,7 +140,7 @@ function test()
     I = Int32[]
     J = Int32[]
     V = Int32[]
-    B = SimpleSparse.sparse(I, J, V, Nr, Nc)
+    B = SimplySparse.sparse(I, J, V, Nr, Nc)
 
     @test B == spzeros(Nr, Nc)
     nothing

@@ -1,4 +1,4 @@
-module SimpleSparse
+module SimplySparse
 
 using Random
 using SparseArrays
@@ -64,7 +64,6 @@ function _compress_rows(Nc, colptr, I, V, combine)
                 prm[i] = i
             end
             sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
-            # sortperm!(prm, rows)
             r = rows[prm[1]]
             v = vals[prm[1]]
             p = newcolptr[c]
@@ -87,9 +86,7 @@ function _compress_rows(Nc, colptr, I, V, combine)
             newcolptr[c+1] = p
         end
     end
-    newI = newI[1:p-1]
-    newV = newV[1:p-1]
-    return newcolptr, newI, newV
+    return newcolptr, resize!(newI, p-1), resize!(newV, p-1)
 end
 
 function sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVector{Tv}, m::Integer, n::Integer, combine) where {Tv,Ti<:Integer}

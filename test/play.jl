@@ -1,7 +1,7 @@
 module t001
 using Random
 using SparseArrays
-using SimpleSparse
+using SimplySparse
 using Test
 
 function test()
@@ -27,7 +27,7 @@ function test()
             J = cat(J1, J2, dims=1)
             V = cat(V1, V2, dims=1)
             @time let
-                B = SimpleSparse.sparse(I, J, V, N, N)
+                B = SimplySparse.sparse(I, J, V, N, N)
             end
             B = nothing
             GC.gc()
