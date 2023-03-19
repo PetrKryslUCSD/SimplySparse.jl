@@ -128,3 +128,25 @@ test()
 nothing
 
 end # module
+
+module t004
+using Random
+using SparseArrays
+using SimpleSparse
+using Test
+
+function test()
+    Nr, Nc = 1, 1
+    I = Int32[]
+    J = Int32[]
+    V = Int32[]
+    B = SimpleSparse.sparse(I, J, V, Nr, Nc)
+
+    @test B == spzeros(Nr, Nc)
+    nothing
+end
+
+test()
+nothing
+
+end # module
