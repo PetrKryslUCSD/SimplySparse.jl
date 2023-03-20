@@ -68,7 +68,7 @@ function _column_pointers(Nc, J)
 end
 
 function _compress_rows!(newcolptr, newI, newV, Nc, colptr, I, V, combine)
-    maxrows = maximum(diff(colptr))
+    @show maxrows = maximum(diff(colptr))
     prma = fill(zero(eltype(I)), maxrows)
     newcolptr[1] = colptr[1]
     p = 1
@@ -80,18 +80,17 @@ function _compress_rows!(newcolptr, newI, newV, Nc, colptr, I, V, combine)
             @inbounds for i in axes(rows,1)
                 prm[i] = i
             end
-            # sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
-            _sortperm!(prm, rows)
-            r = rows[1]
+            sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
+            r = rows[prm[1]]
             v = vals[prm[1]]
             p = newcolptr[c]
             for j in 2:lastindex(rows)
-                if rows[j] == r
+                if rows[prm[j]] == r
                     v = combine(vals[prm[j]], v)
                 else
                     newI[p] = r
                     newV[p] = v
-                    r = rows[j]
+                    r = rows[prm[j]]
                     v = vals[prm[j]]
                     p += 1
                 end
