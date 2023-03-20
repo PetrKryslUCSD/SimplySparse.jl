@@ -60,6 +60,8 @@ function test()
                 I = cat(I1, I2, dims=1)
                 J = cat(J1, J2, dims=1)
                 V = cat(V1, V2, dims=1)
+                # @show Nr, Nc
+                # @show I, J, V
                 B = SimplySparse.sparse(I, J, V, Nr, Nc)
 
                 @test A - B == spzeros(Nr, Nc)
