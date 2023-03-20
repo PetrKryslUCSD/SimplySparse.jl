@@ -19,32 +19,11 @@ function _countingsort3!(outputI, outputJ, outputV, I, J, V, Nc)
         j = J[i]
         k = count[j]
         outputI[k] = I[i]
-        outputJ[k] = J[i]
+        outputJ[k] = j
         outputV[k] = V[i]
         count[j] = count[j] - 1
     end
     return nothing
-end
-
-function _sortperm!(perm, arr)
-# Sorting using a single loop
-    j = 0
-    while true
-        j += 1
-        (j >= length(arr)) && break
-        if (arr[j] > arr[j + 1])
-            # Swapping the elements.
-            temp = arr[j];
-            arr[j] = arr[j + 1];
-            arr[j + 1] = temp;
-            temp = perm[j];
-            perm[j] = perm[j + 1];
-            perm[j + 1] = temp;
-            # so that after update the loop begins from the start.
-            j = 0;
-        end
-    end
-    return perm;
 end
 
 function _column_pointers(Nc, J)
