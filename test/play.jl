@@ -281,12 +281,7 @@
     # end # module
 
 
-module mt001
-using Random
-using SparseArrays
-using SimplySparse
 
-using Test
 
 # function test()
 #     ntries = 1
@@ -342,7 +337,8 @@ const v = rand(100_000);
 const p = zeros(Int, 100_000);
 const s = similar(p)
 
-@btime begin $p .= 1:length($v); sort!($p; Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, $v), $s, 1); end
+@btime begin $p .= 1:length($v); sortperm!($p, $v; initialized=true, scratch=$s); end1
+@btime begin $p .= 1:length($v); sort!($p; alg=Base.Sort.DEFAULT_UNSTABLE, order=Base.Order.Perm(Base.Order.Forward, $v), scratch=$s); end
 @btime begin $p .= 1:length($v);  end
 
 nothing
