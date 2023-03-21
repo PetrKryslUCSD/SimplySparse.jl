@@ -16,25 +16,27 @@ end
 
 function testA()
     N, I, J, V = load_data()
-
+    @info "Built in"
     @time let
         A = sparse(I, J, V, N, N)
     end
+    GC.gc()
 end
 function testB()
     N, I, J, V = load_data()
-
+    @info "SimplySparse"
     @time let
         B = SimplySparse.sparse(I, J, V, N, N)
         # @profview SimplySparse.sparse(I, J, V, N, N)  #
         # @show nnz(B)
     end
+    GC.gc()
 end
 
-testA()
-testA()
 testB()
 testB()
+testA()
+testA()
 
 nothing
 
