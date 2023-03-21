@@ -1,4 +1,3 @@
-
 function _countingsort3!(outputI, outputJ, outputV, I, J, V, Nc)
     count = fill(zero(eltype(J)), Nc+1)
     @inbounds for i in eachindex(J)
