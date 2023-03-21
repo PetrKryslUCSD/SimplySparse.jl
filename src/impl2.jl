@@ -53,6 +53,7 @@ end
 function _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
     maxrows = maximum(diff(colptr))
     prma = fill(zero(eltype(rowval)), maxrows)
+    resize!(newcolptr, length(colptr))
     newcolptr[1] = colptr[1]
     p = 1
     for c in 1:n
