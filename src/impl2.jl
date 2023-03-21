@@ -64,7 +64,7 @@ function _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, n
             @inbounds for i in axes(rows,1)
                 prm[i] = i
             end
-            sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
+            sort!(prm, Base.Sort.QuickSort, Base.Order.Perm(Base.Order.Forward, rows))
             r = rows[prm[1]]
             v = vals[prm[1]]
             p = newcolptr[c]
