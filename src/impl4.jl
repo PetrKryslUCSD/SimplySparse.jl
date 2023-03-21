@@ -54,6 +54,7 @@ function _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, n
     maxrows = maximum(diff(colptr))
     prma = fill(zero(eltype(rowval)), maxrows)
     scratcha = fill(zero(eltype(rowval)), maxrows)
+    resize!(newcolptr, length(colptr))
     newcolptr[1] = colptr[1]
     p = 1
     for c in 1:n
@@ -113,10 +114,10 @@ function sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVector{
         return SparseMatrixCSC(m, n, fill(one(Ti), n+1), Vector{Ti}(), Vector{Tv}())
     else
         colptr, rowval, nzval = _unsorted_csc(I, J, V, m, n)
-        newcolptr = similar(colptr)
+        # newcolptr = similar(colptr)
         # newrowval = similar(rowval) # reuse I?
         # newnzval = similar(V) # reuse V?
-        newrowval, newnzval = I, V
+        newcolptr, newrowval, newnzval = I, J, V
         _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
         # @show newcolptr, newrowval, newnzval
         return SparseMatrixCSC(m, n, newcolptr, newrowval, newnzval)
