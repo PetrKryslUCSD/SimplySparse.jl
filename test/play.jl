@@ -285,36 +285,66 @@ module mt001
 using Random
 using SparseArrays
 using SimplySparse
-using ProfileView
+
 using Test
 
-function test()
-    ntries = 1
-    # for _ in 1:ntries
-    #     for N  in [12, ]
-    #         @show N
-    #         A = sprand(N, N, 0.3)
-    #         I1, J1, V1 = findnz(A)
-    #         A = sprand(N, N, 0.7)
-    #         I2, J2, V2 = findnz(A)
+# function test()
+#     ntries = 1
+#     # for _ in 1:ntries
+#     #     for N  in [12, ]
+#     #         @show N
+#     #         A = sprand(N, N, 0.3)
+#     #         I1, J1, V1 = findnz(A)
+#     #         A = sprand(N, N, 0.7)
+#     #         I2, J2, V2 = findnz(A)
 
-    #         I = cat(I1, I2, dims=1)
-    #         J = cat(J1, J2, dims=1)
-    #         V = cat(V1, V2, dims=1)
-    #         @show I, J, V
+#     #         I = cat(I1, I2, dims=1)
+#     #         J = cat(J1, J2, dims=1)
+#     #         V = cat(V1, V2, dims=1)
+#     #         @show I, J, V
 
-    #         B = SimplySparse.sparse(I, J, V, N, N)
+#     #         B = SimplySparse.sparse(I, J, V, N, N)
 
-    #     end
-    # end
-    (Nr, Nc) = (4, 1)
-    (I, J, V) = ([1, 2, 3, 1, 2, 4], [1, 1, 1, 1, 1, 1], [0.6976804523441354, 0.1730260193308485, 0.33524886657616804, 0.7699142576510188, 0.8495482510000932, 0.5539873737363903])
-    B = SimplySparse.sparse(I, J, V, Nr, Nc)
-    nothing
-end
+#     #     end
+#     # end
+#     (Nr, Nc) = (4, 1)
+#     (I, J, V) = ([1, 2, 3, 1, 2, 4], [1, 1, 1, 1, 1, 1], [0.6976804523441354, 0.1730260193308485, 0.33524886657616804, 0.7699142576510188, 0.8495482510000932, 0.5539873737363903])
+#     B = SimplySparse.sparse(I, J, V, Nr, Nc)
+#     nothing
+# endd
 
-test()
+# test()
+
+# module mt001
+# using BenchmarkTools
+# const v = rand(100_000);
+
+# const p = zeros(Int, 100_000);
+# const s = similar(p)
+
+# @btime sortperm!($p, $v; scratch=$s);
+# # @show p
+# @btime begin $p .= 1:length($v); sort!($p, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, $v)); end
+# @btime begin $p .= 1:length($v);  end
+# nothing
+# end
+# # @show p
+
+# nothing
+
+# end # module
+
+
+module mt002
+using BenchmarkTools
+const v = rand(100_000);
+
+const p = zeros(Int, 100_000);
+const s = similar(p)
+
+@btime begin $p .= 1:length($v); sort!($p; Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, $v), $s, 1); end
+@btime begin $p .= 1:length($v);  end
+
 nothing
-
-end # module
-
+end
+# @show p

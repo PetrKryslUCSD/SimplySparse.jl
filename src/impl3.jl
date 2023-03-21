@@ -53,6 +53,7 @@ end
 function _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
     maxrows = maximum(diff(colptr))
     prma = fill(zero(eltype(rowval)), maxrows)
+    scratcha = fill(zero(eltype(rowval)), maxrows)
     newcolptr[1] = colptr[1]
     p = 1
     for c in 1:n
@@ -63,7 +64,7 @@ function _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, n
             @inbounds for i in axes(rows,1)
                 prm[i] = i
             end
-            sort!(prm, Base.Sort.DEFAULT_UNSTABLE, Base.Order.Perm(Base.Order.Forward, rows))
+            sortperm!(prm, rows; scratch=scratcha)
             r = rows[prm[1]]
             v = vals[prm[1]]
             p = newcolptr[c]

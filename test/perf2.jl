@@ -2,15 +2,15 @@ module t001
 using Random
 using SparseArrays
 using SimplySparse
-using ProfileView
 using DataDrop
 using Test
 
 function load_data()
-    I = DataDrop.retrieve_matrix(joinpath(pwd(), "test", "h8", "I.h5"))
-    J = DataDrop.retrieve_matrix(joinpath(pwd(), "test", "h8", "J.h5"))
-    V = DataDrop.retrieve_matrix(joinpath(pwd(), "test", "h8", "V.h5"))
-    N = 1328319
+    which = "h20"
+    I = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "I.h5"))
+    J = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "J.h5"))
+    V = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "V.h5"))
+    N = maximum(I)
     return N, I, J, V
 end
 
