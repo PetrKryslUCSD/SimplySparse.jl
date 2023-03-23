@@ -29,7 +29,7 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
             colptr, rowval, nzval = _unsorted_csc_subset(I, J, V, m, n, ch[1][1], ch[1][end])
             newcolptr = similar(colptr)
             newrowval = similar(rowval) # reuse I?
-            newnzval = similar(V) # reuse V?
+            newnzval = similar(nzval) # reuse V?
             _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
             push!(ss,  SparseMatrixCSC(m, n, newcolptr, newrowval, newnzval))
             # display(spy(s, canvas=DotCanvas))

@@ -28,8 +28,8 @@ function _unsorted_csc(I, J, V, m, n, only_sparsity_pattern = false)
         countsum += temp
     end
 
-    rowval = similar(I)
-    nzval = similar(V)
+    rowval = similar(I, eltype(I), countsum);
+    nzval = similar(V, eltype(V), countsum)
     # Counting-sort the column and nonzero values from I and V into rowval
     # and nzval. Tracking write positions in colptr corrects the column
     # pointers
