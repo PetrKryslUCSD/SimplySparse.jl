@@ -6,7 +6,7 @@ using DataDrop
 using Test
 
 function load_data()
-    which = "h8"
+    which = "h20"
     I = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "I.h5"))
     J = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "J.h5"))
     V = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "V.h5"))
@@ -36,7 +36,7 @@ function testB()
 end
 function testC()
     N, I, J, V = load_data()
-    @info "SimplySparse"
+    @info "Parallel SimplySparse"
     GC.gc()
     @time let
         C = SimplySparse.par_sparse(I, J, V, N, N)
