@@ -152,3 +152,39 @@ test()
 nothing
 
 end # module
+
+module t005
+using Random
+using SparseArrays
+using SimplySparse
+using Test
+
+function test()
+    for N  in [500, 5000, 50000]
+        ntries = 100
+        for _ in 1:ntries
+            A = sprand(N, N, 2.3 / N)
+            I1, J1, V1 = findnz(A)
+            A = sprand(N, N, 9.1 / N)
+            I2, J2, V2 = findnz(A)
+
+            I = cat(I1, I2, dims=1)
+            J = cat(J1, J2, dims=1)
+            V = cat(V1, V2, dims=1)
+            A = sparse(I, J, V, N, N)
+
+            I = cat(I1, I2, dims=1)
+            J = cat(J1, J2, dims=1)
+            V = cat(V1, V2, dims=1)
+            B = SimplySparse.par_sparse(I, J, V, N, N)
+
+            @test A - B == spzeros(N, N)
+        end
+    end
+    nothing
+end
+
+test()
+nothing
+
+end # module
