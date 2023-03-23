@@ -1,46 +1,57 @@
-# module t001
-# using Random
-# using SparseArrays
-# using SimplySparse
-# using Test
+module t001
+using Random
+using SparseArrays
+using SimplySparse
+using Test
+using UnicodePlots
 
-# function test()
-#     for N  in [500, 5000, 50000, 213001, 471993, 631578, 991377]
-#         ntries = 3
-#         for _ in 1:ntries
-#             @show N
-#             A = sprand(N, N, 10 * rand() / N)
-#             I1, J1, V1 = findnz(A)
-#             A = sprand(N, N, 20 * rand() / N)
-#             I2, J2, V2 = findnz(A)
+function test()
+    for N  in [1237777]
+        ntries = 1
+        for _ in 1:ntries
+            @show N
+            A = sprand(N, N, 70 * rand() / N)
+            I1, J1, V1 = findnz(A)
+            A = sprand(N, N, 80 * rand() / N)
+            I2, J2, V2 = findnz(A)
 
-#             I = cat(I1, I2, dims=1)
-#             J = cat(J1, J2, dims=1)
-#             V = cat(V1, V2, dims=1)
-#             @time let
-#                 A = sparse(I, J, V, N, N)
-#             end
-#             A = nothing
-#             GC.gc()
+            I = cat(I1, I2, dims=1)
+            J = cat(J1, J2, dims=1)
+            V = cat(V1, V2, dims=1)
+            @time A = let
+                A = sparse(I, J, V, N, N)
+            end
 
-#             I = cat(I1, I2, dims=1)
-#             J = cat(J1, J2, dims=1)
-#             V = cat(V1, V2, dims=1)
-#             @time let
-#                 B = SimplySparse.sparse(I, J, V, N, N)
-#             end
-#             B = nothing
-#             GC.gc()
+            I = cat(I1, I2, dims=1)
+            J = cat(J1, J2, dims=1)
+            V = cat(V1, V2, dims=1)
+            @time B = let
+                B = SimplySparse.par_sparse(I, J, V, N, N)
+                # display(spy(B, canvas=DotCanvas))
+            end
+            @show size(B)
 
-#         end
-#     end
-#     nothing
-# end
+            I = cat(I1, I2, dims=1)
+            J = cat(J1, J2, dims=1)
+            V = cat(V1, V2, dims=1)
+            @time C = let
+                C = SimplySparse.sparse(I, J, V, N, N)
+                # display(spy(C, canvas=DotCanvas))
+            end
+            @show size(C)
 
-# test()
-# nothing
+            @show A - B
+            @show A - C
+            nothing
+        end
+    end
+    nothing
+end
 
-# end # module
+test()
+nothing
+
+end # module
 
 # module t001
 # using Random
@@ -330,17 +341,18 @@
 # end # module
 
 
-module mt002
-using BenchmarkTools
-const v = rand(100_000);
+# module mt002
+# using BenchmarkTools
+# const N = 10
+# const v = rand(N);
 
-const p = zeros(Int, 100_000);
-const s = similar(p)
+# const p = zeros(Int, N);
+# const s = similar(p)
 
-@btime begin $p .= 1:length($v); sortperm!($p, $v; initialized=true, scratch=$s); end1
-@btime begin $p .= 1:length($v); sort!($p; alg=Base.Sort.DEFAULT_UNSTABLE, order=Base.Order.Perm(Base.Order.Forward, $v), scratch=$s); end
-@btime begin $p .= 1:length($v);  end
+# @btime begin $p .= 1:length($v); sortperm!($p, $v; initialized=true, scratch=$s); end
+# @btime begin $p .= 1:length($v); sort!($p; alg=Base.Sort.DEFAULT_UNSTABLE, order=Base.Order.Perm(Base.Order.Forward, $v), scratch=$s); end
+# @btime begin $p .= 1:length($v);  end
 
-nothing
-end
-# @show p
+# nothing
+# end
+# # @show p
