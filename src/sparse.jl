@@ -29,3 +29,7 @@ function sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVector{
         return SparseMatrixCSC(m, n, newcolptr, newrowval, newnzval)
     end
 end
+
+
+sparse(I,J,V::AbstractVector,m,n) = sparse(I, J, V, Int(m), Int(n), +)
+sparse(I,J,V::AbstractVector{Bool},m,n) = sparse(I, J, V, Int(m), Int(n), |)
