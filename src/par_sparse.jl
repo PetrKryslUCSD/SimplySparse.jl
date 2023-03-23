@@ -25,7 +25,7 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
         nthr = Base.Threads.nthreads()
         ss = []
         Base.Threads.@threads for ch in chunks(1:n, nthr)
-            @show ch[1][1], ch[1][end]
+            # @show ch[1][1], ch[1][end]
             colptr, rowval, nzval = _unsorted_csc_subset(I, J, V, m, n, ch[1][1], ch[1][end])
             newcolptr = similar(colptr)
             newrowval = similar(rowval) # reuse I?
@@ -35,13 +35,6 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
             # display(spy(s, canvas=DotCanvas))
         end
         return (+)(ss...)
-        # newcolptr = similar(colptr)
-        # newrowval = similar(rowval) # reuse I?
-        # newnzval = similar(V) # reuse V?
-        # newcolptr, newrowval, newnzval = I, J, V
-        # _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
-        # # @show newcolptr, newrowval, newnzval
-        # return SparseMatrixCSC(m, n, newcolptr, newrowval, newnzval)
     end
 end
 

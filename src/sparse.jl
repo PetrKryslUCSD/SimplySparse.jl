@@ -25,7 +25,6 @@ function sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVector{
         # newnzval = similar(V) # reuse V?
         newcolptr, newrowval, newnzval = I, J, V
         _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
-        # @show newcolptr, newrowval, newnzval
         return SparseMatrixCSC(m, n, newcolptr, newrowval, newnzval)
     end
 end
