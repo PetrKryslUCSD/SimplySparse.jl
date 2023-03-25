@@ -23,8 +23,8 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
         return SparseMatrixCSC(m, n, fill(one(Ti), n+1), Vector{Ti}(), Vector{Tv}())
     else
         nthr = Base.Threads.nthreads()
-        S = spzeros(m, n)
         s = Base.Semaphore(1)
+        sms = []
         Base.Threads.@threads for ch in chunks(1:n, nthr)
             # @show ch[1][1], ch[1][end]
             colptr, rowval, nzval = _unsorted_csc_subset(I, J, V, m, n, ch[1][1], ch[1][end])
@@ -33,12 +33,23 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
             newnzval = similar(nzval) # reuse V?
             _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
             Base.acquire(s) do
-                S += SparseMatrixCSC(m, n, newcolptr, newrowval,
-                    newnzval)
+                push!(sms, SparseMatrixCSC(m, n, newcolptr, newrowval,
+                    newnzval))
             end
             # display(spy(s, canvas=DotCanvas))
         end
-        return S
+        return +(sms...)
+# @show         nthr = Base.Threads.nthreads()
+#         return let ch =  chunks(1:n, nthr)[1]
+#             # @show ch[1][1], ch[1][end]
+#             @time colptr, rowval, nzval = _unsorted_csc_subset(I, J, V, m, n, ch[1][1], ch[1][end])
+#             newcolptr = similar(colptr)
+#             newrowval = similar(rowval) # reuse I?
+#             newnzval = similar(nzval) # reuse V?
+#             @time _compress_rows!(newcolptr, newrowval, newnzval, m, n, colptr, rowval, nzval, combine)
+#             S = SparseMatrixCSC(m, n, newcolptr, newrowval,
+#                     newnzval)
+#         end
     end
 end
 

@@ -1,3 +1,40 @@
+
+module tmod001
+using Random
+using SparseArrays
+using SimplySparse
+using SimplySparse.QuickSort: quicksort!, parallel_quicksort!
+using Test
+
+function test(n)
+    b = rand(n)
+    perm = collect(1:n)
+
+    for i = 1:5
+        # print("Parallel  : ")
+        a1 = copy(b); p1 = copy(perm);
+        # @time
+        parallel_quicksort!(a1, p1);
+        # print("Sequential: ")
+        a2 = copy(b); p2 = copy(perm);
+        # @time
+        quicksort!(a2, p2);
+        # println("")
+        @test a1 == sort(a1)
+        @test a1 == a2
+        @test p1 == sortperm(b)
+        @test p2 == sortperm(b)
+        @test b[p1] == sort(b)
+        @test b[p2] == sort(b)
+    end
+end
+
+test(2^21)
+
+nothing
+
+end # module
+
 module t001
 using Random
 using SparseArrays

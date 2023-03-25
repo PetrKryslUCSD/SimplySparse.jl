@@ -11,6 +11,7 @@ function load_data()
     J = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "J.h5"))
     V = DataDrop.retrieve_matrix(joinpath(pwd(), "test", which, "V.h5"))
     N = maximum(I)
+    @info "$N equations, $(length(I)) triplets"
     return N, I, J, V
 end
 
@@ -46,13 +47,13 @@ function testC()
     GC.gc()
 end
 
-testB()
-testB()
 testA()
 testA()
 testC()
 testC()
-
+# testB()
+# testB()
+# #
 nothing
 
 end # module

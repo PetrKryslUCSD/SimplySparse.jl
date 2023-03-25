@@ -31,7 +31,6 @@ function test()
             end
             B = nothing
             GC.gc()
-
         end
     end
     nothing
