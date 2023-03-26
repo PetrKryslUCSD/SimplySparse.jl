@@ -87,6 +87,7 @@ function par_sparse(I::AbstractVector{Ti}, J::AbstractVector{Ti}, V::AbstractVec
                 # display(spy(s, canvas=DotCanvas))
             end
         end
+
         return @time _merge(sms)
     end
 end
