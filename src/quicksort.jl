@@ -20,22 +20,22 @@ const SEQ_THRESH = 2^9
     return (left,right)
 end
 
-function quicksort!(A, perm, i=1, j=length(A))
+function quicksortperm!(A, perm, i=1, j=length(A))
     if j > i
         left, right = partition!(A, perm, A[(j+i) >>> 1], i, j)
-        quicksort!(A, perm, i, right)
-        quicksort!(A, perm, left, j)
+        quicksortperm!(A, perm, i, right)
+        quicksortperm!(A, perm, left, j)
     end
 end
 
-function parallel_quicksort!(A, perm, i=1, j=length(A))
+function pquicksortperm!(A, perm, i=1, j=length(A))
     if j-i <= SEQ_THRESH
-        quicksort!(A, perm, i, j)
+        quicksortperm!(A, perm, i, j)
         return
     end
     left, right = partition!(A, perm, A[(j+i) >>> 1], i, j)
-    t = Threads.@spawn parallel_quicksort!(A, perm, $i, $right)
-    parallel_quicksort!(A, perm, left, j)
+    t = Threads.@spawn pquicksortperm!(A, perm, $i, $right)
+    pquicksortperm!(A, perm, left, j)
     wait(t)
     return
 end
@@ -46,7 +46,7 @@ end # module
 # using Random
 # using SparseArrays
 
-# using Main.QuickSort: quicksort!, parallel_quicksort!
+# using Main.QuickSort: quicksortperm!, pquicksortperm!
 # using Test
 
 # function test(n)
@@ -56,10 +56,10 @@ end # module
 #     for i = 1:1
 #         print("Parallel  : ")
 #         a1 = copy(b); p1 = copy(perm);
-#         @time        parallel_quicksort!(a1, p1);
+#         @time        pquicksortperm!(a1, p1);
 #         print("Sequential: ")
 #         a2 = copy(b); p2 = copy(perm);
-#         @time        quicksort!(a2, p2);
+#         @time        quicksortperm!(a2, p2);
 #         println("")
 #         @test a1 == sort(a1)
 #         @test a1 == a2

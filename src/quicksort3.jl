@@ -47,7 +47,7 @@ end # module
 # using Random
 # using SparseArrays
 
-# using Main.QuickSort: quicksort3!, parallel_quicksort!
+# using Main.QuickSort: quicksort3!, pquicksortperm!
 # using Test
 
 # function test(n)
@@ -57,7 +57,7 @@ end # module
 #     for i = 1:1
 #         print("Parallel  : ")
 #         a1 = copy(b); p1 = copy(perm);
-#         @time        parallel_quicksort!(a1, p1);
+#         @time        pquicksortperm!(a1, p1);
 #         print("Sequential: ")
 #         a2 = copy(b); p2 = copy(perm);
 #         @time        quicksort!(a2, p2);
